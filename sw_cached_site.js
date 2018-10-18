@@ -60,7 +60,10 @@ function submitFormData() {
     // make this a loop through items
     return idbKeyval.get('uuid')
         .then(val => {
-            const {apiEndpoint, headers} = val;
-            return fetch(apiEndpoint, headers).then(() => idbKeyval.del('uuid'));
+            if (val) {
+                const {apiEndpoint, headers} = val;
+                return fetch(apiEndpoint, headers).then(() => idbKeyval.del('uuid'));
+            }
+            
         })
 }

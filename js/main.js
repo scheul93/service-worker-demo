@@ -44,6 +44,7 @@ async function processFormData(e) {
         await setDataInIndexedDB(formData);
         navigator.serviceWorker.ready
             .then(swRegistration => swRegistration.sync.register('form-submit'))
+            .then(() => setMessage('Message saved from service worker.', 'success'))
             .catch(() => postFormData(formData));
     } else {
         postFormData(formData)

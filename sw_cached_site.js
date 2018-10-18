@@ -1,5 +1,5 @@
 // Caching defined
-self.importScripts('./js/lib/idb-keyval.mjs');
+self.importScripts('idb-keyval.min.js');
 
 const cacheName = 'v2';
 

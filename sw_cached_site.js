@@ -1,4 +1,5 @@
-// Caching defined pages
+// Caching defined
+self.importScripts('./js/lib/idb-keyval.mjs');
 
 const cacheName = 'v2';
 

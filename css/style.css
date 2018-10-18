@@ -37,6 +37,14 @@ nav .current > a {
   color: yellow;
 }
 
-.message {
+.message--error {
+  color: red;
+}
+
+.message--success {
+  color: green;
+}
+
+.message--warning {
   color: orange;
 }

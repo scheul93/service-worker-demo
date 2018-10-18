@@ -11,7 +11,7 @@ self.addEventListener('install', function(e) {
 self.addEventListener('activate', function(e) {
     console.log('Service Worker: Activated');
 
-//     // Remove unwanted caches
+    // Remove unwanted caches
     e.waitUntil(
         caches.keys()
             .then(cacheNames => {
@@ -28,35 +28,38 @@ self.addEventListener('activate', function(e) {
 });
 
 // Call Fetch Event
-// self.addEventListener('fetch', e => {
-//     console.log('Service Worker: Fetching');
-//     // if the fetch fails (offline), then pull from cache
-//     e.respondWith(
-//         fetch(e.request)
-//             .then(resp => {
-//                 // Clone resp from server into cache
-//                 const resClone = resp.clone();
-//                 caches.open(cacheName)
-//                     .then(cache => {
-//                         cache.put(e.request, resClone)
-//                     });
-//                 return resp;
-//             })
-//             .catch(err => caches.match(e.request).then(res => res))
-//     )
-// });
+self.addEventListener('fetch', e => {
+    console.log('Service Worker: Fetching');
+    // if the fetch fails (offline), then pull from cache
+    if (e.request.method === 'GET') {
+        e.respondWith(
+            fetch(e.request)
+                .then(resp => {
+                    // Clone resp from server into cache
+                    const resClone = resp.clone();
+                    caches.open(cacheName)
+                        .then(cache => {
+                            cache.put(e.request, resClone)
+                        });
+                    return resp;
+                })
+                .catch(err => caches.match(e.request).then(res => res))
+        )
+    }
+   
+});
 
 self.addEventListener('sync', function (event) {
-    console.log('AM I HERE???');
-    // if (event.tag == 'todo_updated') {
-    //   event.waitUntil(submitFormData());
-    // }
-    self.registration.showNotification("Sync event fired!");
+    if (event.tag == 'form-submit') {
+      event.waitUntil(submitFormData());
+    }
   });
 
 function submitFormData() {
-    console.log('submitFormData')
-    return new Promise((resolve, reject), () => {
-        return setTimeout(() => resolve(), 500);
-    })
+    // make this a loop through items
+    return idbKeyval.get('uuid')
+        .then(val => {
+            const {apiEndpoint, headers} = val;
+            return fetch(apiEndpoint, headers).then(() => idbKeyval.del('uuid'));
+        })
 }

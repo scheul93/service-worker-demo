@@ -61,9 +61,9 @@ function submitFormData() {
     return idbKeyval.get('uuid')
         .then(val => {
             if (val) {
-                const {apiEndpoint, headers} = val;
-                return fetch(apiEndpoint, headers).then(() => idbKeyval.del('uuid'));
+                const {endpoint, header} = val;
+                return fetch(endpoint, header).then(() => idbKeyval.del('uuid'));
             }
-            
+            return Promise.reject();
         })
 }

@@ -62,7 +62,10 @@ function submitFormData() {
         .then(val => {
             if (val) {
                 const {endpoint, header} = val;
-                return fetch(endpoint, header).then(() => idbKeyval.del('uuid'));
+                return fetch(endpoint, header).then(() => {
+                    console.log('Service Worker: completed fetch.');
+                    idbKeyval.del('uuid')
+                });
             }
             return Promise.reject();
         })

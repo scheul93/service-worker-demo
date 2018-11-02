@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="css/style.css">
+	<title>Home - Service Worker Example</title>
+</head>
+
+<body>
+	<header>
+		<h1>Service Worker Example</h1>
+	</header>
+	<nav>
+		<ul>
+			<li class="current">
+				<a href="index.html">Home</a>
+			</li>
+			<li>
+				<a href="notifications.html">Notifications</a>
+            </li>
+            <li>
+				<a href="queue.html">Queue</a>
+			</li>
+		</ul>
+	</nav>
+	<main>
+        <!-- https://serviceworke.rs/request-deferrer_demo.html -->
+		<div class="js-message"></div>
+        <h2>How to Use</h2>
+        <p>
+            Add and delete quotes.
+            <br/><br/>
+            Go offline.
+            <br/><br/>
+            Add quotes.
+            <br/><br/>
+            Notice that the delete button is not available when offline.
+            <br/><br/>
+            Go online. Watch the magic of the synchronization.
+        </p>
+
+        <h2>Add a Quote</h2>
+        <form class="js-quote-form">
+            <div>
+                <label for="text">Quote</label>
+                <input type="text" name="text" id="text" required/>
+            </div>
+            <div>
+                <label for="author">Sayer</label>
+                <input type="text" name="author" id="author" />
+            </div>
+            <button type="submit" class="js-submit">Add</button>
+        </form>
+
+        <h2>Quotes</h2>
+        <table class="js-quote-wrapper"></table>
+	</main>
+
+	<script src="js/queue.js"></script>
+</body>
+
+</html>

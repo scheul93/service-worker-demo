@@ -60,7 +60,7 @@ const pushNotifications = () => {
 		if ('serviceWorker' in navigator) {
 			console.log('Service Worker and Push is supported');
 	
-			navigator.serviceWorker.register('./sw_push_notifications.js')
+			navigator.serviceWorker.register('./sw_notifications.js')
 				.then(swReg => {
 					console.log('Service Worker is registered', swReg);
 				})

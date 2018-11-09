@@ -10,7 +10,9 @@ self.addEventListener('activate', function(e) {
     console.log('Service Worker: Activated');
 
     // Remove unwanted caches
+    // extends the life of the activate event until promise resolves successfully
     e.waitUntil(
+        // cache api keys
         caches.keys()
             .then(cacheNames => {
                 return Promise.all(
@@ -31,9 +33,10 @@ self.addEventListener('fetch', e => {
     // if the fetch fails (offline), then pull from cache
     if (e.request.method === 'GET') {
         e.respondWith(
+            // perform the fetch
             fetch(e.request)
                 .then(resp => {
-                    // Clone resp from server into cache
+                    // copy the fetch resp into cache
                     const resClone = resp.clone();
                     caches.open(cacheName)
                         .then(cache => {

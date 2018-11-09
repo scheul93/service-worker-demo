@@ -3,14 +3,7 @@ importScripts('./js/lib/serviceWorkerWare.js');
 // a wrapper for indexedDB
 importScripts('./js/lib/localforage.min.js');
 
-const root = () => {
-    const tokens = self.location.split('/');
-    tokens[tokens.length - 1] = '';
-    return tokens.join('/');
-}
-
 const endpoint = 'https://5bc8d3808bfe5a00131b6f96.mockapi.io/api/quotations';
-
 const worker = new ServiceWorkerWare();
 
 /**

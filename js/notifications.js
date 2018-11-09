@@ -12,12 +12,11 @@ const pushNotifications = () => {
 	}
 
 	function displayNotification() {
-
 		//display a Notification
 		if (Notification.permission === 'granted') {
 			navigator.serviceWorker.getRegistration().then(reg => {
 				const options = {
-					body: 'First notification!',
+					body: 'Demo notification!',
 					icon: 'images/notification-flat.png',
 					vibrate: [100, 50, 100],
 					data: {
@@ -26,7 +25,12 @@ const pushNotifications = () => {
 					},
 					actions: [{
 							action: 'explore',
-							title: 'Go to the site',
+							title: 'Go to home page',
+							icon: 'images/checkmark.png'
+						},
+						{
+							action: 'google',
+							title: 'Google it',
 							icon: 'images/checkmark.png'
 						},
 						{

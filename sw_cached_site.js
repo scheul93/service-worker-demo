@@ -1,6 +1,3 @@
-// Caching defined
-self.importScripts('./js/lib/idb-keyval.min.js');
-
 const cacheName = 'v2';
 
 // Call Install Event
@@ -49,24 +46,3 @@ self.addEventListener('fetch', e => {
     }
    
 });
-
-self.addEventListener('sync', function (event) {
-    if (event.tag == 'form-submit') {
-      event.waitUntil(submitFormData());
-    }
-  });
-
-function submitFormData() {
-    // make this a loop through items
-    return idbKeyval.get('uuid')
-        .then(val => {
-            if (val) {
-                const {endpoint, header} = val;
-                return fetch(endpoint, header).then(() => {
-                    console.log('Service Worker: completed fetch.');
-                    idbKeyval.del('uuid')
-                });
-            }
-            return Promise.reject();
-        })
-}

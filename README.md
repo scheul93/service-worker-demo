@@ -1,5 +1,6 @@
 # Service Worker Demo
 Following along with the [tutorial](https://www.youtube.com/watch?v=ksXwaWHCW6k)
+Updates to the README for draft PR
 
 ## Browser APIs
 + [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API): proxy server that sits between web apps, the browser and the network.

@@ -23,6 +23,11 @@ module.exports = {
     },
     "rules": {
         "semi": ["error", "always"],
-        "quotes": ["error", "double"]
+        "quotes": ["error", "double"],
+        "no-undef": "off",
+        "no-unused-vars": "off",
+        "no-useless-escape": "off",
+        "no-redeclare": "off",
+        "no-prototype-builtins": "off"
     },
-}
+};

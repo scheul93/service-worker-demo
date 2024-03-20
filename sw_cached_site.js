@@ -1,13 +1,13 @@
-const cacheName = 'v2';
+const cacheName = "v2";
 
 // Call Install Event
-self.addEventListener('install', function(e) {
-    console.log('Service Worker: Installed');
+self.addEventListener("install", function(e) {
+    console.log("Service Worker: Installed");
 });
 
 // Call Activate Event
-self.addEventListener('activate', function(e) {
-    console.log('Service Worker: Activated');
+self.addEventListener("activate", function(e) {
+    console.log("Service Worker: Activated");
 
     // Remove unwanted caches
     // extends the life of the activate event until promise resolves successfully
@@ -22,16 +22,16 @@ self.addEventListener('activate', function(e) {
                             return caches.delete(cache);
                         }
                     })
-                )
+                );
             })
     );
 });
 
 // Call Fetch Event
-self.addEventListener('fetch', e => {
-    console.log('Service Worker: Fetching');
+self.addEventListener("fetch", e => {
+    console.log("Service Worker: Fetching");
     // if the fetch fails (offline), then pull from cache
-    if (e.request.method === 'GET') {
+    if (e.request.method === "GET") {
         e.respondWith(
             // perform the fetch
             fetch(e.request)
@@ -40,12 +40,12 @@ self.addEventListener('fetch', e => {
                     const resClone = resp.clone();
                     caches.open(cacheName)
                         .then(cache => {
-                            cache.put(e.request, resClone)
+                            cache.put(e.request, resClone);
                         });
                     return resp;
                 })
                 .catch(err => caches.match(e.request).then(res => res))
-        )
+        );
     }
    
 });

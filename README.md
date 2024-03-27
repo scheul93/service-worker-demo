@@ -19,3 +19,5 @@ Background Sync API was really difficult to use. Testing was super hard especial
 
 
 Not sure the best way to import scripts into my service worker. I needed access some libraries so I ended up saving it to my project and loading it using `importScripts`.
+
+Testing a PR

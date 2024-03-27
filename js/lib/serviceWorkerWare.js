@@ -1,12 +1,12 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-    var sww = require('./lib/sww.js');
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f;}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e);},l,l.exports,e,t,n,r);}return n[o].exports;}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s;})({1:[function(require,module,exports){
+    var sww = require("./lib/sww.js");
     
     self.ServiceWorkerWare = sww.ServiceWorkerWare;
     self.StaticCacher = sww.StaticCacher;
     self.SimpleOfflineCache = sww.SimpleOfflineCache;
     
     },{"./lib/sww.js":5}],2:[function(require,module,exports){
-    'use strict';
+    "use strict";
     
     // Inspired by expressjs and shed (https://github.com/wibblymat/shed)
     function Router(options) {
@@ -14,8 +14,8 @@
       this.stack = [];
     }
     
-    Router.prototype.ALL_METHODS = 'all';
-    Router.prototype.methods = ['get', 'post', 'put', 'delete', 'head',
+    Router.prototype.ALL_METHODS = "all";
+    Router.prototype.methods = ["get", "post", "put", "delete", "head",
       Router.prototype.ALL_METHODS];
     
     /**
@@ -55,10 +55,10 @@
       var self = this;
       this.methods.forEach(function(method) {
         obj[method] = function(path, mw) {
-          if (typeof mw.onFetch !== 'function' && typeof mw !== 'function') {
-            throw new Error('This middleware cannot handle fetch request');
+          if (typeof mw.onFetch !== "function" && typeof mw !== "function") {
+            throw new Error("This middleware cannot handle fetch request");
           }
-          var handler = typeof mw.onFetch !== 'undefined' ?
+          var handler = typeof mw.onFetch !== "undefined" ?
             mw.onFetch.bind(mw) : mw;
           self.add(method, path, handler);
         };
@@ -119,7 +119,7 @@
     Router.prototype._sanitizeMethod = function(method) {
       var sanitizedMethod = method.toLowerCase().trim();
       if (this.methods.indexOf(sanitizedMethod) === -1) {
-        throw new Error('Method "' + method + '" is not supported');
+        throw new Error("Method \"" + method + "\" is not supported");
       }
       return sanitizedMethod;
     };
@@ -131,37 +131,37 @@
     Router.prototype._parseSimplePath = function(path) {
       // Check for named placeholder crowding
       if (/\:[a-zA-Z0-9]+\:[a-zA-Z0-9]+/g.test(path)) {
-        throw new Error('Invalid usage of named placeholders');
+        throw new Error("Invalid usage of named placeholders");
       }
     
       // Check for mixed placeholder crowdings
       var mixedPlaceHolders =
         /(\*\:[a-zA-Z0-9]+)|(\:[a-zA-Z0-9]+\:[a-zA-Z0-9]+)|(\:[a-zA-Z0-9]+\*)/g;
-      if (mixedPlaceHolders.test(path.replace(/\\\*/g,''))) {
-        throw new Error('Invalid usage of named placeholders');
+      if (mixedPlaceHolders.test(path.replace(/\\\*/g,""))) {
+        throw new Error("Invalid usage of named placeholders");
       }
     
       // Try parsing the string and converting special characters into regex
       try {
         // Parsing anonymous placeholders with simple backslash-escapes
         path = path.replace(/(.|^)[*]+/g, function(m,escape) {
-          return escape==='\\' ? '\\*' : (escape+'(?:.*?)');
+          return escape==="\\" ? "\\*" : (escape+"(?:.*?)");
         });
     
         // Parsing named placeholders with backslash-escapes
         var tags = [];
         path = path.replace(/(.|^)\:([a-zA-Z0-9]+)/g, function (m, escape, tag) {
-          if (escape === '\\') { return ':' + tag; }
+          if (escape === "\\") { return ":" + tag; }
           tags.push(tag);
-          return escape + '(.+?)';
+          return escape + "(.+?)";
         });
     
-        return { regexp: RegExp(path + '$'), tags: tags };
+        return { regexp: RegExp(path + "$"), tags: tags };
       }
     
       // Failed to parse final path as a RegExp
       catch (ex) {
-        throw new Error('Invalid path specified');
+        throw new Error("Invalid path specified");
       }
     };
     
@@ -170,7 +170,7 @@
     
     },{}],3:[function(require,module,exports){
     /* global Promise, caches */
-    'use strict';
+    "use strict";
     
     // Default Match options, not exposed.
     var DEFAULT_MATCH_OPTIONS = {
@@ -178,13 +178,13 @@
       ignoreMethod: false,
       ignoreVary: false
     };
-    var DEFAULT_MISS_POLICY = 'fetch';
+    var DEFAULT_MISS_POLICY = "fetch";
     // List of different policies
     var MISS_POLICIES = [
       DEFAULT_MISS_POLICY
     ];
     
-    var DEFAULT_CACHE_NAME = 'offline';
+    var DEFAULT_CACHE_NAME = "offline";
     
     
     /**
@@ -200,7 +200,7 @@
       this.options = options || DEFAULT_MATCH_OPTIONS;
       this.missPolicy = missPolicy || DEFAULT_MISS_POLICY;
       if (MISS_POLICIES.indexOf(this.missPolicy) === -1) {
-        console.warn('Policy ' + missPolicy + ' not supported');
+        console.warn("Policy " + missPolicy + " not supported");
         this.missPolicy = DEFAULT_MISS_POLICY;
       }
     }
@@ -241,11 +241,11 @@
     
     },{}],4:[function(require,module,exports){
     /* globals caches, Promise, Request */
-    'use strict';
+    "use strict";
     
     function StaticCacher(fileList) {
       if (!Array.isArray(fileList) || fileList.length === 0) {
-        throw new Error('Invalid file list');
+        throw new Error("Invalid file list");
       }
       this.files = fileList;
     }
@@ -259,17 +259,17 @@
     
     StaticCacher.prototype.getDefaultCache = function sc_getDefaultCache() {
       if (!this.cacheRequest) {
-        this.cacheRequest = caches.open('offline');
+        this.cacheRequest = caches.open("offline");
       }
       return this.cacheRequest;
     };
     
     StaticCacher.prototype.addAll = function(cache, urls) {
       if (!cache) {
-        throw new Error('Need a cache to store things');
+        throw new Error("Need a cache to store things");
       }
       // Polyfill until chrome implements it
-      if (typeof cache.addAll !== 'undefined') {
+      if (typeof cache.addAll !== "undefined") {
         return cache.addAll(urls);
       }
     
@@ -298,18 +298,18 @@
     
     },{}],5:[function(require,module,exports){
     /* global fetch, BroadcastChannel, clients, Promise, Request, Response */
-    'use strict';
+    "use strict";
     
     var debug = function(){};
     
     
-    var StaticCacher = require('./staticcacher.js');
-    var SimpleOfflineCache = require('./simpleofflinecache.js');
-    var Router = require('./router.js');
+    var StaticCacher = require("./staticcacher.js");
+    var SimpleOfflineCache = require("./simpleofflinecache.js");
+    var Router = require("./router.js");
     
-    var ERROR = 'error';
-    var CONTINUE = 'continue';
-    var TERMINATE = 'terminate';
+    var ERROR = "error";
+    var CONTINUE = "continue";
+    var TERMINATE = "terminate";
     var TERMINATION_TOKEN = {};
     
     function DEFAULT_FALLBACK_MW(request) {
@@ -318,10 +318,10 @@
     
     function ServiceWorkerWare(options) {
       options = options || {};
-      if (typeof options === 'function' || options.onFetch) {
+      if (typeof options === "function" || options.onFetch) {
         options = { fallbackMiddleware: options };
       }
-      options.autoClaim = ('autoClaim' in options) ? options.autoClaim : true;
+      options.autoClaim = ("autoClaim" in options) ? options.autoClaim : true;
       this.middleware = [];
       this.router = new Router({});
       this.router.proxyMethods(this);
@@ -332,19 +332,19 @@
     
     ServiceWorkerWare.prototype.init = function sww_init() {
       // lifecycle events
-      addEventListener('install', this);
-      addEventListener('activate', this);
-      addEventListener('beforeevicted', this);
-      addEventListener('evicted', this);
+      addEventListener("install", this);
+      addEventListener("activate", this);
+      addEventListener("beforeevicted", this);
+      addEventListener("evicted", this);
     
       // network events
-      addEventListener('fetch', this);
+      addEventListener("fetch", this);
     
       // misc events
-      addEventListener('message', this);
+      addEventListener("message", this);
     
       // push notifications
-      addEventListener('push', this);
+      addEventListener("push", this);
     
       // XXX: Add default configuration
     };
@@ -354,25 +354,25 @@
      */
     ServiceWorkerWare.prototype.handleEvent = function sww_handleEvent(evt) {
     
-      debug('Event received: ' + evt.type);
+      debug("Event received: " + evt.type);
       switch(evt.type) {
-        case 'install':
+        case "install":
           this.onInstall(evt);
           break;
-        case 'fetch':
+        case "fetch":
           this.onFetch(evt);
           break;
-        case 'activate':
+        case "activate":
           this.onActivate(evt);
           break;
-        case 'push':
-        case 'message':
-        case 'beforeevicted':
-        case 'evicted':
+        case "push":
+        case "message":
+        case "beforeevicted":
+        case "evicted":
           this.forwardEvent(evt);
           break;
         default:
-          debug('Unhandled event ' + evt.type);
+          debug("Unhandled event " + evt.type);
       }
     };
     
@@ -464,7 +464,7 @@
      */
     ServiceWorkerWare.endWith = function (response) {
       if (arguments.length === 0) {
-        throw new Error('Type error: endWith() must be called with a value.');
+        throw new Error("Type error: endWith() must be called with a value.");
       }
       return [TERMINATION_TOKEN, response];
     };
@@ -518,9 +518,9 @@
           nextResponse = response;
         }
         else {
-          var msg = 'Type error: middleware must return a Response, ' +
-                    'a Request, a pair [Response, Request] or a Promise ' +
-                    'resolving to one of these types.';
+          var msg = "Type error: middleware must return a Response, " +
+                    "a Request, a pair [Response, Request] or a Promise " +
+                    "resolving to one of these types.";
           nextAction = ERROR;
           error = new Error(msg);
         }
@@ -539,7 +539,7 @@
      * (on the way of a promise to be resolved) when installing the SW.
      */
     ServiceWorkerWare.prototype.onInstall = function sww_oninstall(evt) {
-      var installation = this.getFromMiddleware('onInstall');
+      var installation = this.getFromMiddleware("onInstall");
       evt.waitUntil(installation);
     
     };
@@ -549,7 +549,7 @@
      * (on the way of a promise to be resolved) when SW activates.
      */
     ServiceWorkerWare.prototype.onActivate = function sww_activate(evt) {
-      var activation = this.getFromMiddleware('onActivate');
+      var activation = this.getFromMiddleware("onActivate");
       if (this.autoClaim) {
         activation =
           activation.then(function claim() { return self.clients.claim(); });
@@ -567,7 +567,7 @@
     ServiceWorkerWare.prototype.getFromMiddleware =
     function sww_getFromMiddleware(method) {
       var tasks = this.middleware.reduce(function (tasks, mw) {
-        if (typeof mw[method] === 'function') {
+        if (typeof mw[method] === "function") {
           tasks.push(mw[method]());
         }
         return tasks;
@@ -590,17 +590,17 @@
       // If the first parameter is not a function we will understand that
       // is the path to handle, and the handler will be the second parameter
       if (arguments.length === 0) {
-        throw new Error('No arguments given');
+        throw new Error("No arguments given");
       }
       var mw = arguments[0];
-      var path = '*';
+      var path = "*";
       var method = this.router.ALL_METHODS;
-      if (typeof mw === 'string') {
+      if (typeof mw === "string") {
         path = arguments[0];
         mw = arguments[1];
         var kind = typeof mw;
-        if (!mw || !(kind === 'object' || kind === 'function')) {
-          throw new Error('No middleware specified');
+        if (!mw || !(kind === "object" || kind === "function")) {
+          throw new Error("No middleware specified");
         }
         if (Router.prototype.methods.indexOf(arguments[2]) !== -1) {
           method = arguments[2];
@@ -611,9 +611,9 @@
       // Add to the router just if middleware object is able to handle onFetch
       // or if we have a simple function
       var handler = null;
-      if (typeof mw.onFetch === 'function') {
+      if (typeof mw.onFetch === "function") {
         handler = mw.onFetch.bind(mw);
-      } else if (typeof mw === 'function') {
+      } else if (typeof mw === "function") {
         handler = mw;
       }
       if (handler) {
@@ -622,7 +622,7 @@
       // XXX: Attaching the broadcastMessage to mw that implements onMessage.
       // We should provide a way to get a reference to the SWW object and do
       // the broadcast from there
-      if (typeof mw.onMessage === 'function') {
+      if (typeof mw.onMessage === "function") {
         mw.broadcastMessage = this.broadcastMessage;
       }
     };
@@ -634,12 +634,12 @@
      */
     ServiceWorkerWare.prototype.forwardEvent = function sww_forwardEvent(evt) {
       this.middleware.forEach(function(mw) {
-        var handlerName = 'on' + evt.type.replace(/^[a-z]/,
+        var handlerName = "on" + evt.type.replace(/^[a-z]/,
           function(m){
              return m.toUpperCase();
           }
         );
-        if (typeof mw[handlerName] !== 'undefined') {
+        if (typeof mw[handlerName] !== "undefined") {
           mw[handlerName].call(mw, evt);
         }
       });
@@ -656,7 +656,7 @@
       msg, channel) {
       // XXX: Until https://bugzilla.mozilla.org/show_bug.cgi?id=1130685 is fixed
       // we can use BroadcastChannel API in Firefox Nightly
-      if (typeof BroadcastChannel === 'function') {
+      if (typeof BroadcastChannel === "function") {
         var bc = new BroadcastChannel(channel);
         bc.postMessage(msg);
         bc.close();
@@ -687,7 +687,7 @@
           var normalized = ServiceWorkerWare.normalizeMwAnswer(answer, req, res);
     
           return normalized.then(function (info) {
-            if (info.nextAction === 'error') {
+            if (info.nextAction === "error") {
               return Promise.reject(info.error);
             }
             return endWith(info.response);

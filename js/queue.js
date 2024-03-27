@@ -1,21 +1,21 @@
 const queue = () => {
-    const endpoint = 'https://5bc8d3808bfe5a00131b6f96.mockapi.io/api/quotations';
+    const endpoint = "https://5bc8d3808bfe5a00131b6f96.mockapi.io/api/quotations";
     let tableEl;
     function init() {
-        tableEl = document.querySelector('.js-quote-wrapper')
+        tableEl = document.querySelector(".js-quote-wrapper");
         initServiceWorker();
         bindEvents();
-        loadQuotations()
+        loadQuotations();
     }
 
     function initServiceWorker() {
-        if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.register('./sw_queue.js')
+        if ("serviceWorker" in navigator) {
+			navigator.serviceWorker.register("./sw_queue.js")
 				.then(swReg => {
-					console.log('Service Worker is registered', swReg);
+					console.log("Service Worker is registered", swReg);
 				})
 				.catch(err => {
-					console.error('Service Worker Error', err);
+					console.error("Service Worker Error", err);
 				});
 		} else {
             loadQuotations();
@@ -23,22 +23,22 @@ const queue = () => {
     }
 
     function bindEvents() {
-        const formEl = document.querySelector('.js-quote-form');
-        formEl.addEventListener('submit', e => onFormSubmit(e, formEl));
-        document.addEventListener('click', onDocClick);
-        window.addEventListener('online', () => loadQuotations());
+        const formEl = document.querySelector(".js-quote-form");
+        formEl.addEventListener("submit", e => onFormSubmit(e, formEl));
+        document.addEventListener("click", onDocClick);
+        window.addEventListener("online", () => loadQuotations());
     }
 
     function onFormSubmit(e, formEl) {
         e.preventDefault();
-        const formData = [...formEl.querySelectorAll('input')].reduce((accum, el) => {
+        const formData = [...formEl.querySelectorAll("input")].reduce((accum, el) => {
             accum[el.name] = el.value;
             return accum;
         }, {});
 
         fetch(endpoint, { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' },
+            method: "POST", 
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
         })
         .then(function(response) {
@@ -48,12 +48,12 @@ const queue = () => {
             return response.json();
         })
         .then(function(resp) {
-            tableEl.insertAdjacentHTML('beforeend', renderRow(resp));
+            tableEl.insertAdjacentHTML("beforeend", renderRow(resp));
         });
     }
 
     function onDocClick(e) {
-        if (e.target.matches('.js-delete')) {
+        if (e.target.matches(".js-delete")) {
             deleteQuote(e.target.dataset.id);
         }
     }
@@ -69,7 +69,7 @@ const queue = () => {
     function showQuotations(collection) {
         tableEl.innerHTML = collection.reduce((accum, quote) => {
             return accum + renderRow(quote);
-        }, '');
+        }, "");
     }
 
     function renderRow(quote) {
@@ -86,24 +86,24 @@ const queue = () => {
                 </td>
                 
             </tr>
-        `
+        `;
     }
 
     function renderDeleteBtn(quote) {
         if (quote.id) {
             return `<button class="js-delete" data-id=${quote.id}>Delete</button>`;
         } else {
-            return '(in queue...)';
+            return "(in queue...)";
         }
     }
 
     function deleteQuote(id) {
-        return fetch(`${endpoint}/${id}`, { method: 'DELETE' })
+        return fetch(`${endpoint}/${id}`, { method: "DELETE" })
             .then(resp => {
                 const rowEl = tableEl.querySelector(`[data-id="${id}"]`);
                 if (resp.status === 204) {
-                    const actionCell = rowEl.querySelector('.js-action-cell')
-                    actionCell.innerHTML = '(in queue to delete...)'
+                    const actionCell = rowEl.querySelector(".js-action-cell");
+                    actionCell.innerHTML = "(in queue to delete...)";
                 } else {
                     rowEl.parentNode.removeChild(rowEl);
                 }
@@ -113,6 +113,6 @@ const queue = () => {
     
 
     init();
-}
+};
 
 queue();
